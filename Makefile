@@ -22,7 +22,7 @@ LIBFT_REPO		=	libft
 
 LIBFT			=	$(LIBFT_REPO)/libft.a
 
-READLINE		=	/Users/$(USER)/homebrew/opt/readline
+READLINE		=	/Users/$(USER)/.brew/opt/readline
 
 %.o: %.c $(CDEPS)
 	$(CC) $(CFLAGS) -c $< -o $@
@@ -30,13 +30,13 @@ READLINE		=	/Users/$(USER)/homebrew/opt/readline
 all: $(NAME)
 
 $(LIBFT):
-	git clone https://github.com/AtchogloDev/$(LIBFT_REPO).git
+	git clone git@github.com:PythonGermany/42_libft libft
 	make -C $(LIBFT_REPO)
 
 $(READLINE)/lib:
 	brew install readline
 
-$(NAME): $(LIBFT) $(READLINE)/lib $(OBJ)
+$(NAME): $(LIBFT) $(OBJ)
 	$(CC) $(CFLAGS) $(LIBFT) -L$(READLINE)/lib -lreadline $(OBJ) -o $(NAME)
 
 clean:
@@ -61,6 +61,9 @@ uninstall:
 
 m: $(NAME)
 	@./$(NAME)
+
+mc: $(NAME)
+	make && make clean && clear && ./$(NAME)
 
 test-leaks: $(NAME)
 	valgrind --leak-check=full --show-leak-kinds=all ./$(NAME)

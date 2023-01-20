@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signal.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: katchogl <katchogl@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: rburgsta <rburgsta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/03 10:34:46 by rburgsta          #+#    #+#             */
-/*   Updated: 2023/01/18 19:56:21 by katchogl         ###   ########.fr       */
+/*   Updated: 2023/01/20 11:08:04 by rburgsta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,13 +29,30 @@ void	ft_signal_handler(int sig, siginfo_t *info, void *ptr)
 			rl_replace_line ("", 0);
 			rl_redisplay ();
 		}
+		// else 
+		// {
+		// 	rl_replace_line ("\03", 0);
+		// 	rl_on_new_line ();
+		// 	rl_redisplay ();
+		// 	//ft_putchar_fd('\04', 0);
+		// }
 		data->status = EXIT_SIGINT;
 	}
+	// else if (sig == SIGQUIT)
+	// {
+	// 	rl_on_new_line();
+	// 	rl_redisplay();
+	// }
+}
+
+void	ft_signal_handler_child(int sig)
+{
+	if (sig == SIGINT)
+		exit(2);
 	else if (sig == SIGQUIT)
 	{
-		ft_putendl_fd ("received SIGQUIT", STDERR_FD);
-		rl_on_new_line();
-		rl_redisplay();
+		write(1, "Quit: 3\n", 8);
+		exit(3);
 	}
 }
 
@@ -43,10 +60,13 @@ void	ft_init_signal_handler(t_data *data)
 {
 	struct sigaction	sa;
 
+	data->tty_attr.c_lflag &= ~ECHOCTL;
+	if (tcsetattr(STDIN_FILENO, TCSADRAIN, &data->tty_attr) != 0)
+		ft_throw(data, ERR_FAIL, "main settattr fail", true);
 	ft_signal_handler(0, NULL, data);
 	sa.sa_sigaction = &ft_signal_handler;
 	sa.sa_flags = SA_SIGINFO;
 	sigemptyset(&sa.sa_mask);
-	sigaction(SIGINT, &sa, NULL);
-	sigaction(SIGQUIT, &sa, NULL);
+	if (sigaction(SIGINT, &sa, NULL) || signal(SIGQUIT, SIG_IGN) == SIG_ERR)
+		ft_throw(data, ERR_FAIL, "set_signal", true);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_child.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: katchogl <katchogl@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: rburgsta <rburgsta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/12 14:30:06 by katchogl          #+#    #+#             */
-/*   Updated: 2023/01/18 19:47:47 by katchogl         ###   ########.fr       */
+/*   Updated: 2023/01/20 11:31:25 by rburgsta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,8 @@ static void	ft_exec_cmd_or_builtin1(t_data *data, int i, int j)
 	ft_prepare_cmd_exec (data, &pid, &infd, &outfd);
 	if (pid == 0)
 	{
+		signal(SIGINT, ft_signal_handler_child);
+		signal(SIGQUIT, ft_signal_handler_child);
 		ft_pipe(data, j, STREAM_INPUT);
 		ft_pipe(data, j, STREAM_OUTPUT);
 		ft_redirect(data, i);
@@ -76,6 +78,8 @@ static void	ft_exec_cmd_or_builtin1(t_data *data, int i, int j)
 			ft_exec_cmd (data, i);
 		ft_throw(data, ERR_CMD_NOT_FOUND, data->cmds[i].name, true);
 	}
+	else
+		signal(SIGQUIT, SIG_IGN);
 }
 
 void	ft_child(t_data *data, int i, int j)

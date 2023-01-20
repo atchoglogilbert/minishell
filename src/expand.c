@@ -12,15 +12,11 @@
 
 #include "minishell.h"
 
-static void	remove_quote(t_data *data, bool *quote, char **str, int index)
+void	ft_remove_quote(t_data *data, bool *quote, char **str, int index)
 {
 	char	*temp;
-	int		i;
 
-	i = index + 1;
-	while ((*str)[i] != '\0' && (*str)[i] != (*str)[index])
-		i++;
-	if ((*str)[i] != '\0')
+	if (quote != NULL)
 		*quote = !*quote;
 	temp = (char *)malloc(ft_strlen(*str));
 	ft_assert_not_null(data, temp);
@@ -84,9 +80,9 @@ void ft_expand_str(t_data *data, char **str)
 	while ((*str)[++i] != '\0')
 	{
 		if (!double_quote && (*str)[i] == '\'')
-			remove_quote(data, &single_quote, str, i--);
+			ft_remove_quote(data, &single_quote, str, i--);
 		else if (!single_quote && (*str)[i] == '\"')
-			remove_quote(data, &double_quote, str, i--);
+			ft_remove_quote(data, &double_quote, str, i--);
 		else if ((*str)[i] == '$' && (*str)[i + 1] != '\0' && !single_quote)
 			ft_insert_var(data, str, i-- + 1);
 		else if ((*str)[i] == '~'

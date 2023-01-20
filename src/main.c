@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: katchogl <katchogl@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: rburgsta <rburgsta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/23 05:43:21 by katchogl          #+#    #+#             */
-/*   Updated: 2023/01/18 13:46:37 by katchogl         ###   ########.fr       */
+/*   Updated: 2023/01/20 11:05:24 by rburgsta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,12 +40,9 @@ int	main(int argc, char **argv, char **envp)
 	if (argc != 1 || argv == NULL || envp == NULL)
 		return (EXIT_FAILURE);
 	data = ft_initdata (envp);
-	ft_init_signal_handler(data);
 	while (true)
 	{
-		data->tty_attr.c_lflag &= ~ECHOCTL;
-    	if (tcsetattr(STDIN_FILENO, TCSADRAIN, &data->tty_attr) != 0)
-			ft_throw (data, ERR_FAIL, "main settattr fail", true);
+		ft_init_signal_handler(data);
 		ft_readline (data);
 		if (data->line == NULL)
 			ft_exit(data, NULL);

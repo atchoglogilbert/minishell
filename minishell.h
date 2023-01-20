@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: katchogl <katchogl@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: rburgsta <rburgsta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/23 05:44:06 by katchogl          #+#    #+#             */
-/*   Updated: 2023/01/18 21:23:24 by katchogl         ###   ########.fr       */
+/*   Updated: 2023/01/20 10:48:32 by rburgsta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -207,4 +207,6 @@ bool	ft_assert_valid_permissions(t_data *data, char *pathname, int permss,
 void	ft_redirect(t_data *data, int i);
 void	ft_close_all(t_data *data);
 void	ft_putinfo(char *str, char *info, char *str2);
+void	ft_remove_quote(t_data *data, bool *quote, char **str, int index);
+void	ft_signal_handler_child(int sig);
 #endif
